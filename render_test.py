@@ -14,7 +14,7 @@ options.hardware_mapping = "adafruit-hat"
 matrix = RGBMatrix(options=options)
 
 dir_font = graphics.Font()
-dir_font.LoadFont("6x10.bdf")
+dir_font.LoadFont("5x8.bdf")
 time_font = graphics.Font()
 time_font.LoadFont("5x8.bdf")
 
@@ -47,7 +47,7 @@ try:
         draw_l_train_logo(2, 18)
         graphics.DrawText(canvas, dir_font, 14, 12, font_color, "MANH")
         graphics.DrawText(canvas, dir_font, 14, 27, font_color, "BKLN")
-        graphics.DrawText(canvas, time_font, 42, 12, font_color, "3min")
+        graphics.DrawText(canvas, time_font, 37, 12, font_color, "11min")
         graphics.DrawText(canvas, time_font, 42, 27, font_color, "5min")
         canvas = matrix.SwapOnVSync(canvas)
 
