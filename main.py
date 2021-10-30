@@ -50,8 +50,12 @@ def run():
 		draw_l_train_logo(2, 18, canvas)
 		graphics.DrawText(canvas, dir_font, 14, 12, font_color, "MANH")
 		graphics.DrawText(canvas, dir_font, 14, 27, font_color, "BKLN")
-		graphics.DrawText(canvas, time_font, 37, 12, font_color, manhattan_in)
-		graphics.DrawText(canvas, time_font, 42, 27, font_color, brooklyn_in)
+
+		manhattan_offset = 37 if len(manhattan_in) == 4 else 42
+		brooklyn_offset = 37 if len(brooklyn_in) == 4 else 42
+
+		graphics.DrawText(canvas, time_font, manhattan_offset, 12, font_color, manhattan_in)
+		graphics.DrawText(canvas, time_font, brooklyn_offset, 27, font_color, brooklyn_in)
 		canvas = matrix.SwapOnVSync(canvas)
 
 		time.sleep(15)
