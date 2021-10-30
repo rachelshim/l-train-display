@@ -13,17 +13,12 @@ options.hardware_mapping = "adafruit-hat"
 
 matrix = RGBMatrix(options=options)
 
-#font = graphics.Font()
-#font.LoadFont("../../../fonts/5x8.bdf")
-#textColor = graphics.Color(255, 255, 0)
+font = graphics.Font()
+font.LoadFont("../../../fonts/5x8.bdf")
 
 l_train_color = graphics.Color(167, 169, 172)
-white = graphics.Color(0, 0, 0)
+white = graphics.Color(255, 255, 255)
 canvas = matrix.CreateFrameCanvas()
-
-#while True:
-#    graphics.DrawCircle(canvas, 5, 5, 2, l_train_color)
-#    canvas = matrix.SwapOnVSync(canvas)
 
 # drawing logo 10x10 pixels
 def draw_l_train_logo(x, y):
@@ -47,7 +42,10 @@ try:
     while True:
         draw_l_train_logo(2, 2)
         draw_l_train_logo(2, 19)
+        canvas.DrawText(canvas, font, 15, 2, white, "BKLN")
+        canvas.DrawText(canvas, font, 15, 10, white, "MANH")
         canvas = matrix.SwapOnVSync(canvas)
+
 except KeyboardInterrupt:
     sys.exit(0)
 
