@@ -1,62 +1,65 @@
 #!/usr/bin/python3
 
-import datetime, requests, time
-import gtfs_realtime_pb2, nyct_subway_pb2
+import time, sys
+from rgbmatrix import graphics, RGBMatrix, RGBMatrixOptions
+from TrainUpdater import get_next_trains
 
-URL = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
-key = "" # add MTA API key here
+options = RGBMatrixOptions()
+options.rows = 32
+options.cols = 64
+options.chain_length = 1
+options.parallel = 1
+options.hardware_mapping = "adafruit-hat"
 
-def get_arrival_time_string(arrival):
-	now = time.time()
-	train_in = round((arrival - now)/60)
-	if train_in < -5:
-		return "--"
-	elif train_in < 1:
-		return "Now"
-	else:
-		return str(train_in) + "min"
+matrix = RGBMatrix(options=options)
 
-def parse_timestamp(timestamp):
-	return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
+dir_font = graphics.Font()
+dir_font.LoadFont("5x8.bdf")
+time_font = graphics.Font()
+time_font.LoadFont("5x8.bdf")
 
-def main():
-	while True:
-		resp = requests.get(URL, headers={"x-api-key": key})
+l_train_color = graphics.Color(167, 169, 172)
+ont_color = graphics.Color(250, 200, 50)
 
-		timestamp = time.time()
 
-		message = gtfs_realtime_pb2.FeedMessage()
-		message.ParseFromString(resp.content)
+canvas = matrix.CreateFrameCanvas()
 
-		next_train = {
-			"brooklyn": 0,
-			"manhattan": 0
-		}
-		entities = message.entity
-		for entity in entities:
-			trip = entity.trip_update
-			if trip:
-				for time_update in trip.stop_time_update:
-					arrival = time_update.arrival.time
-					if time_update.stop_id == "L08S":	# Brooklyn-bound from Bedford Ave
-						next_train["brooklyn"] = arrival if next_train["brooklyn"] == 0 else min(arrival, next_train["brooklyn"])
-					elif time_update.stop_id == "L08N":	# Manhattan-bound from Bedford Ave
-						next_train["manhattan"] = arrival if next_train["manhattan"] == 0 else min(arrival, next_train["manhattan"])
+# drawing 10x10 L train logo
+def draw_l_train_logo(x, y):
+	for j in range(3):
+		offset = j + 1
+		for i in range(offset, 10 - offset):
+			canvas.SetPixel(x + i, y + 2 - j, 117, 119, 122)
+			canvas.SetPixel(x + i, y + 8 + j, 117, 119, 122)
+	for j in range(3, 8):
+		for i in range(10):
+			if i == 4:
+				canvas.SetPixel(x + i, y + j, 255, 255, 255)
+			elif j == 7 and (i == 5 or i == 6):
+				canvas.SetPixel(x + i, y + j, 255, 255, 255)
 			else:
-				pass # ignore stopped trains
+				canvas.SetPixel(x + i, y + j, 117, 119, 122)
 
-		brooklyn_in = get_arrival_time_string(next_train["brooklyn"])
-		manhattan_in = get_arrival_time_string(next_train["manhattan"])
-		
-		print(parse_timestamp(timestamp))
-		print("the next brooklyn-bound train is due at: ", parse_timestamp(next_train["brooklyn"]))
-		print("the next manhattan-bound train is due at: ", parse_timestamp(next_train["manhattan"]))
-		print("next brooklyn train in: ", brooklyn_in)
-		print("next manhattan train in: ", manhattan_in)
-		print("\n")
+def run():
+    print("Press CTRL-C to stop.")
+    while True:
 
-		time.sleep(15)
+    	manhattan_in, brooklyn_in = get_next_trains()
+
+        draw_l_train_logo(2, 3)
+        draw_l_train_logo(2, 18)
+        graphics.DrawText(canvas, dir_font, 14, 12, font_color, "MANH")
+        graphics.DrawText(canvas, dir_font, 14, 27, font_color, "BKLN")
+        graphics.DrawText(canvas, time_font, 37, 12, font_color, manhattan_in)
+        graphics.DrawText(canvas, time_font, 42, 27, font_color, brooklyn_in)
+        canvas = matrix.SwapOnVSync(canvas)
+
+        time.sleep(15)
 
 
 if __name__ == "__main__":
-	main()
+	try:
+		run()
+	except KeyboardInterrupt:
+		print("Exiting l-train-display\n")
+		sys.exit(0)
