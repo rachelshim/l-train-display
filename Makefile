@@ -1,2 +1,2 @@
 run:
-	./main.py
+	sudo ./main.py
