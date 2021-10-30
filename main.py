@@ -41,20 +41,20 @@ def draw_l_train_logo(x, y):
 				canvas.SetPixel(x + i, y + j, 117, 119, 122)
 
 def run():
-    print("Press CTRL-C to stop.")
-    while True:
+	print("Press CTRL-C to stop.")
+	while True:
 
-    	manhattan_in, brooklyn_in = get_next_trains()
+		manhattan_in, brooklyn_in = get_next_trains()
 
-        draw_l_train_logo(2, 3)
-        draw_l_train_logo(2, 18)
-        graphics.DrawText(canvas, dir_font, 14, 12, font_color, "MANH")
-        graphics.DrawText(canvas, dir_font, 14, 27, font_color, "BKLN")
-        graphics.DrawText(canvas, time_font, 37, 12, font_color, manhattan_in)
-        graphics.DrawText(canvas, time_font, 42, 27, font_color, brooklyn_in)
-        canvas = matrix.SwapOnVSync(canvas)
+		draw_l_train_logo(2, 3)
+		draw_l_train_logo(2, 18)
+		graphics.DrawText(canvas, dir_font, 14, 12, font_color, "MANH")
+		graphics.DrawText(canvas, dir_font, 14, 27, font_color, "BKLN")
+		graphics.DrawText(canvas, time_font, 37, 12, font_color, manhattan_in)
+		graphics.DrawText(canvas, time_font, 42, 27, font_color, brooklyn_in)
+		canvas = matrix.SwapOnVSync(canvas)
 
-        time.sleep(15)
+		time.sleep(15)
 
 
 if __name__ == "__main__":
