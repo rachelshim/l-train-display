@@ -2,10 +2,10 @@
 
 import time, sys
 from rgbmatrix import graphics, RGBMatrix, RGBMatrixOptions
-from TrainUpdater import get_next_trains
+from train_updater import get_next_trains
 
 # drawing 10x10 L train logo
-def draw_l_train_logo(x, y):
+def draw_l_train_logo(x, y, canvas):
 	for j in range(3):
 		offset = j + 1
 		for i in range(offset, 10 - offset):
@@ -38,15 +38,16 @@ def run():
 	time_font.LoadFont("5x8.bdf")
 
 	l_train_color = graphics.Color(167, 169, 172)
-	ont_color = graphics.Color(250, 200, 50)
+	font_color = graphics.Color(250, 200, 50)
 
 	canvas = matrix.CreateFrameCanvas()
 
 	while True:
 		manhattan_in, brooklyn_in = get_next_trains()
+                canvas.Clear()
 
-		draw_l_train_logo(2, 3)
-		draw_l_train_logo(2, 18)
+		draw_l_train_logo(2, 3, canvas)
+		draw_l_train_logo(2, 18, canvas)
 		graphics.DrawText(canvas, dir_font, 14, 12, font_color, "MANH")
 		graphics.DrawText(canvas, dir_font, 14, 27, font_color, "BKLN")
 		graphics.DrawText(canvas, time_font, 37, 12, font_color, manhattan_in)
