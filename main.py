@@ -44,7 +44,7 @@ def run():
 
 	while True:
 		manhattan_in, brooklyn_in = get_next_trains()
-                canvas.Clear()
+				canvas.Clear()
 
 		draw_l_train_logo(2, 3, canvas)
 		draw_l_train_logo(2, 18, canvas)
