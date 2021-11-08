@@ -58,7 +58,7 @@ def run():
 		graphics.DrawText(canvas, time_font, brooklyn_offset, 27, font_color, brooklyn_in)
 		canvas = matrix.SwapOnVSync(canvas)
 
-		time.sleep(15)
+		time.sleep(30)
 
 
 if __name__ == "__main__":
