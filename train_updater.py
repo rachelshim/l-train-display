@@ -7,6 +7,8 @@ import logging
 URL = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
 key = "" # add MTA API key here
 
+# set up logging
+logging.basicConfig(filename="trains.log", level=logging.DEBUG)
 
 def get_arrival_time_string(arrival):
 	now = time.time()
@@ -22,6 +24,7 @@ def parse_timestamp(timestamp):
 	return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
 def get_next_trains():
+	logging.basicConfig(filename="trains.log", l)
 	try:
 		resp = requests.get(URL, headers={"x-api-key": key})
 
