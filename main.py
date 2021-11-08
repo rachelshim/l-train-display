@@ -3,6 +3,10 @@
 import time, sys
 from rgbmatrix import graphics, RGBMatrix, RGBMatrixOptions
 from train_updater import get_next_trains
+import logging
+
+# set up logging
+logging.basicConfig(filename="main.log", level=logging.DEBUG)
 
 # drawing 10x10 L train logo
 def draw_l_train_logo(x, y, canvas):
@@ -21,7 +25,7 @@ def draw_l_train_logo(x, y, canvas):
 				canvas.SetPixel(x + i, y + j, 117, 119, 122)
 
 def run():
-	print("Press CTRL-C to stop.")
+	logging.info("Starting l-train-display.")
 
 	options = RGBMatrixOptions()
 	options.rows = 32
@@ -65,6 +69,6 @@ if __name__ == "__main__":
 	try:
 		run()
 	except KeyboardInterrupt:
-		print("Exiting l-train-display\n")
+		logging.info("Exiting l-train-display\n")
 		sys.exit(0)
 		
