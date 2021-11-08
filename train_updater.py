@@ -52,10 +52,10 @@ def get_next_trains():
 		manhattan_in = get_arrival_time_string(next_train["manhattan"])
 		brooklyn_in = get_arrival_time_string(next_train["brooklyn"])
 		
-		logging.info("the next manhattan-bound train is due at: ", parse_timestamp(next_train["manhattan"]))
-		logging.info("the next brooklyn-bound train is due at: ", parse_timestamp(next_train["brooklyn"]))
-		logging.info("next manhattan train in: ", manhattan_in)
-		logging.info("next brooklyn train in: ", brooklyn_in)
+		logging.info("the next manhattan-bound train is due at: %s", parse_timestamp(next_train["manhattan"]))
+		logging.info("the next brooklyn-bound train is due at: %s", parse_timestamp(next_train["brooklyn"]))
+		logging.info("next manhattan train in: %s", manhattan_in)
+		logging.info("next brooklyn train in: %s", brooklyn_in)
 
 		return manhattan_in, brooklyn_in
 
