@@ -23,3 +23,9 @@ Here's the stuff I used (and spent too much money on). Everything is from Adafru
 - Adafruit RGB Matrix Bonnet for Raspberry Pi
 In total it runs about $100-150.
 
+### Future work
+- error handling: pretty sure that if wifi is bad the loop blocks on the API call. maybe add timeouts?
+- store expected times for the next _n_ trains (as opposed to next train) to fall back on in an error scenario, i.e. when call to API fails or returns empty data
+- fix logging (this is mainly due to the fact that i've never used real logging in python)
+- the display shows "Now" whenever the train is <30 seconds away or `arrival time - current time < 0`. Should show the actual next train time as opposed to "current" train which has left the station. This is because when going through the list of train arrivals, it looks for the earliest one and sometimes (by the time we get the data) the earliest one has already left the station. Storing arrival times for _n_ trains rather than just one should help with this.
+- run updating board and calling API to grab train data on two separate threads, so we can update the board faster (e.g. 10 seconds) than what we're limited by the API (20-30 seconds)
