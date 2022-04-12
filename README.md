@@ -29,3 +29,7 @@ In total it runs about $100-150.
 - fix logging (this is mainly due to the fact that i've never used real logging in python)
 - the display shows "Now" whenever the train is <30 seconds away or `arrival time - current time < 0`. Should show the actual next train time as opposed to "current" train which has left the station. This is because when going through the list of train arrivals, it looks for the earliest one and sometimes (by the time we get the data) the earliest one has already left the station. Storing arrival times for _n_ trains rather than just one should help with this.
 - run updating board and calling API to grab train data on two separate threads, so we can update the board faster (e.g. 10 seconds) than what we're limited by the API (20-30 seconds)
+- scrolling text for line terminus: right now, the display shows the direction of the trains (i.e. `MANH` or `BKLN`) because it was easier to display. We could show the terminus of the line (e.g. `8th Ave` and `Rockaway Parkawy-Canarsie`) with scrolling text.
+- show next 2 trains, as opposed to showing just the next train. might require some thinking on how to display this, the LED board is kind small.
+- make L train logo look nicer. right now it's very blocky (and kind of ratch -- uses a loop to color pixels). we can prob make the circle logo smoother w/dimmed lights at the edges -- must look into this.
+- rewrite the whole thing in golang (lmao)
