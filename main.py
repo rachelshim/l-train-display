@@ -9,8 +9,8 @@ import logging
 import constants
 
 NEXT_TRAINS = {
-    "Northbound": Trip(),
-    "Southbound": Trip()
+    "Northbound": Trip(None, None, None),
+    "Southbound": Trip(None, None, None)
 }
 lock = threading.Lock()
 
@@ -113,7 +113,8 @@ if __name__ == "__main__":
 
     canvas = matrix.CreateFrameCanvas()
 
-    pos = 14
+    pos_manh = 14
+    pos_bkln = 14
 
     try:
         # display_thread = threading.Thread(target=update_display, name="display_thread")
@@ -123,11 +124,13 @@ if __name__ == "__main__":
             draw_l_train_logo(2, 3, canvas)
             draw_l_train_logo(2, 18, canvas)
 
-            len = graphics.DrawText(canvas, dir_font, pos, 12, font_color, "14 St-Union Sq")
-            len = graphics.DrawText(canvas, dir_font, pos, 27, font_color, "Canarsie-Rockaway Pkwy")
+            manh_len = graphics.DrawText(canvas, dir_font, pos_manh, 12, font_color, "14 St-Union Sq")
+            bkln_len = graphics.DrawText(canvas, dir_font, pos_bkln, 27, font_color, "Canarsie-Rockaway Pkwy")
             pos -= 1
-            if (pos + len < 0):
-                pos = 14
+            if (pos_manh + manh_len < 14):
+                pos_manh = 14
+            if (pos_bkln + bkln_len < 14):
+                pos_bkln = 14
             time.sleep(0.05)
             canvas = matrix.SwapOnVSync(canvas)
 
