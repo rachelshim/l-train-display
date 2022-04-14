@@ -1,64 +1,79 @@
 #!/usr/bin/python3
-
 import datetime, requests, time
 import gtfs_realtime_pb2, nyct_subway_pb2
 import logging
+import constants
 
-URL = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
-key = "" # add MTA API key here
+class TrainUpdater:
+	def __init__(self, url, key):
+		self.URL = url
+		self.key = key
 
-# set up logging
-logging.basicConfig(filename="trains.log", level=logging.DEBUG)
+	class Trip(object):
+		def __init__(self, terminus, direction, next_train):
+			self.terminus = terminus
+			self.direction = direction
+			self.next_train = next_train
 
-def get_arrival_time_string(arrival):
-	now = time.time()
-	train_in = round((arrival - now)/60)
-	if train_in < -5:
-		return "--"
-	elif train_in < 1:
-		return "Now"
-	else:
-		return str(train_in) + "min"
+	# get_next_trains pings the MTA API for the most up-to-date train arrivals at Bedford Ave
+	def get_next_trains():
+		try:
+			resp = requests.get(URL, headers={"x-api-key": key})
+			timestamp = time.Time()
 
-def parse_timestamp(timestamp):
-	return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
+			message = gtfs_realtime_pb2.FeedMessage()
+			message.ParseFromString(resp.content)
 
-def get_next_trains():
-	try:
-		resp = requests.get(URL, headers={"x-api-key": key})
+			trips_to_bedford = []
 
-		timestamp = time.time()
+			# parse through all the trips listed in this message
+			entities = message.entity
+			for entity in entities:
+				trip_update = entity.trip_update
+				if trip_update:
+					parsed_trip = parse_trip_update(trip_update)
+					if parsed_trip:
+						trips_to_bedford.append(parsed_trip)
 
-		message = gtfs_realtime_pb2.FeedMessage()
-		message.ParseFromString(resp.content)
+			return parse_trips_to_bedford(trips_to_bedford)
 
-		next_train = {
-			"manhattan": 0,
-			"brooklyn": 0
-		}
-		entities = message.entity
-		for entity in entities:
-			trip = entity.trip_update
-			if trip:
-				for time_update in trip.stop_time_update:
-					arrival = time_update.arrival.time
-					if time_update.stop_id == "L08N":	# Manhattan-bound from Bedford Ave
-						next_train["manhattan"] = arrival if next_train["manhattan"] == 0 else min(arrival, next_train["manhattan"])
-					elif time_update.stop_id == "L08S":	# Brooklyn-bound from Bedford Ave
-						next_train["brooklyn"] = arrival if next_train["brooklyn"] == 0 else min(arrival, next_train["brooklyn"])
-			else:
-				pass # ignore stopped trains
 
-		manhattan_in = get_arrival_time_string(next_train["manhattan"])
-		brooklyn_in = get_arrival_time_string(next_train["brooklyn"])
-		
-		logging.info("the next manhattan-bound train is due at: %s", parse_timestamp(next_train["manhattan"]))
-		logging.info("the next brooklyn-bound train is due at: %s", parse_timestamp(next_train["brooklyn"]))
-		logging.info("next manhattan train in: %s", manhattan_in)
-		logging.info("next brooklyn train in: %s", brooklyn_in)
+	# parse_trip_update parses a trip_update entity in the GTFS feed response.
+	# if the trip specified in the trip_update stops at Bedford Av, it returns
+	# a Trip object. If the trip_update does not stop at Bedford Av, it returns null.
+	def parse_trip_update(trip_update):
+		direction = trip_update.trip.nyct_trip_descriptor.direction
+		final_stop_id = ""
+		max_stop_sequence = 0
+		next_train_at_bedford = 0
 
-		return manhattan_in, brooklyn_in
+		for stop_time_update in trip_update:
+			if stop_time_update.stop_sequence > max_stop_sequence:
+				max_stop_sequence = stop_time_update.stop_sequence
+				final_stop_id = stop_time_update.stop_id
+			if stop_time_update.stop_id == constants.BEDFORD_AV_NORTH or stop_time_update.stop_id == constants.BEDFORD_AV_SOUTH:
+				next_train_at_bedford = stop_time_update.arrival.time
 
-	except Exception as e:
-		logging.error(e)
-		return "--", "--"
+		if next_train_at_bedford == 0:
+			return null
+		else:
+			return Trip(final_stop_id, direction, next_train_at_bedford)
+
+
+	# parse_trips_to_bedford returns the soonest trips in each direction (North and South)
+	# that stops at Bedford Av.
+	# if there are no trips to be found for one of the directions, return null for that direction.
+	def parse_trips_to_bedford(trips_to_bedford):
+		northbound_trips = filter(lambda x: x.direction == constants.DIRECTION_NORTH, trips_to_bedford)
+		southbound_trips = filter(lambda x: x.direction == constants.DIRECTION_SOUTH, trips_to_bedford)
+
+		sorted_northbound_trips = sorted(northbound_trips, key=lambda x: x.next_train)
+		sorted_southbound_trips = sorted(southbound_trips, key=lambda x: x.next_train)
+
+		next_northbound_train = sorted_northbound_trips[0] if len(sorted_northbound_trips) > 0 else null
+		next_southbound_train = sorted_southbound_trips[0] if len(sorted_southbound_trips) > 0 else null
+
+		return (next_northbound_train, next_southbound_train)
+
+
+
