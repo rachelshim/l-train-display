@@ -27,6 +27,16 @@ def draw_l_train_logo(x, y, canvas):
             else:
                 canvas.SetPixel(x + i, y + j, 117, 119, 122)
 
+def get_arrival_time_string(arrival):
+    now = time.time()
+    train_in = round((arrival - now)/60)
+    if train_in < -5:
+        return "--"
+    elif train_in < 1:
+        return "Now"
+    else:
+        return (str(train_in) + "min")
+
 def run():
     logging.info("Starting l-train-display.")
 
@@ -57,8 +67,8 @@ def run():
 
         manh_terminus = manh.terminus if manh else "manh"
         bkln_terminus = bkln.terminus if bkln else "bkln"
-        manh_next_train = str(manh.next_train) if manh else "--"
-        bkln_next_train = str(bkln.next_train) if bkln else "--"
+        manh_next_train = get_arrival_time_string(manh.next_train)
+        bkln_next_train = get_arrival_time_string(bkln.next_train)
 
         draw_l_train_logo(2, 3, canvas)
         draw_l_train_logo(2, 18, canvas)
