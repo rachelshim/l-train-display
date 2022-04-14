@@ -36,6 +36,9 @@ class TrainUpdater:
 						trips_to_bedford.append(parsed_trip)
 
 			return parse_trips_to_bedford(trips_to_bedford)
+		except Exception as e:
+			logging.error(e)
+			return null, null
 
 
 	# parse_trip_update parses a trip_update entity in the GTFS feed response.
