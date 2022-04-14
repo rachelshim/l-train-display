@@ -65,8 +65,17 @@ def run():
         manh, bkln = train_updater.get_next_trains()
         canvas.Clear()
 
-        manh_terminus = manh.terminus if manh else "manh"
-        bkln_terminus = bkln.terminus if bkln else "bkln"
+        # manh_terminus = manh.terminus if manh else "manh"
+        # bkln_terminus = bkln.terminus if bkln else "bkln"
+
+        # TODO: check for manh/bkln not being None
+
+        # scratch work for displaying terminus
+        manh_stop_id = manh.terminus[:-1]
+        manh_terminus = constants.L_STOPS[stop_id]
+        bkln_stop_id = bkln.terminus[:-1]
+        bkln_terminus = constants.L_STOPS[stop_id]
+
         manh_next_train = get_arrival_time_string(manh.next_train)
         bkln_next_train = get_arrival_time_string(bkln.next_train)
 
