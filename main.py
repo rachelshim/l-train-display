@@ -72,9 +72,9 @@ def run():
 
         # scratch work for displaying terminus
         manh_stop_id = manh.terminus[:-1]
-        manh_terminus = constants.L_STOPS[stop_id]
+        manh_terminus = constants.L_STOPS[manh_stop_id]
         bkln_stop_id = bkln.terminus[:-1]
-        bkln_terminus = constants.L_STOPS[stop_id]
+        bkln_terminus = constants.L_STOPS[bkln_stop_id]
 
         manh_next_train = get_arrival_time_string(manh.next_train)
         bkln_next_train = get_arrival_time_string(bkln.next_train)
