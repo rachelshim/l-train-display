@@ -3,10 +3,10 @@
 import time, sys
 from rgbmatrix import graphics, RGBMatrix, RGBMatrixOptions
 from train_updater import TrainUpdater
+import mta_api_key
 import logging
 
 URL = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
-key = "" # add MTA API key here
 
 # set up logging
 logging.basicConfig(filename="main.log", level=logging.DEBUG)
@@ -30,7 +30,7 @@ def draw_l_train_logo(x, y, canvas):
 def run():
 	logging.info("Starting l-train-display.")
 
-	train_updater = TrainUpdater(URL, key)
+	train_updater = TrainUpdater(URL, mta_api_key.key)
 
 	options = RGBMatrixOptions()
 	options.rows = 32
@@ -65,8 +65,8 @@ def run():
 		graphics.DrawText(canvas, dir_font, 14, 12, font_color, manh_terminus)
 		graphics.DrawText(canvas, dir_font, 14, 27, font_color, bkln_terminus)
 
-		manhattan_offset = 37 if len(manhattan_in) == 5 else 42
-		brooklyn_offset = 37 if len(brooklyn_in) == 5 else 42
+		manhattan_offset = 37 if len(manh_next_train) == 5 else 42
+                brooklyn_offset = 37 if len(bkln_next_train) == 5 else 42
 
 		graphics.DrawText(canvas, time_font, manhattan_offset, 12, font_color, manh_next_train)
 		graphics.DrawText(canvas, time_font, brooklyn_offset, 27, font_color, bkln_next_train)
