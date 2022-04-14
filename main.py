@@ -35,7 +35,7 @@ def get_arrival_time_string(arrival):
     elif train_in < 1:
         return "Now"
     else:
-        return (str(train_in) + "min")
+        return str(train_in)
 
 def run():
     logging.info("Starting l-train-display.")
@@ -75,8 +75,8 @@ def run():
         graphics.DrawText(canvas, dir_font, 14, 12, font_color, manh_terminus)
         graphics.DrawText(canvas, dir_font, 14, 27, font_color, bkln_terminus)
 
-        manhattan_offset = 37 if len(manh_next_train) == 5 else 42
-        brooklyn_offset = 37 if len(bkln_next_train) == 5 else 42
+        manhattan_offset = 62 - len(manh_next_train) * 5
+        brooklyn_offset = 62 - len(bkln_next_train) * 5
 
         graphics.DrawText(canvas, time_font, manhattan_offset, 12, font_color, manh_next_train)
         graphics.DrawText(canvas, time_font, brooklyn_offset, 27, font_color, bkln_next_train)
