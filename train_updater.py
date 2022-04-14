@@ -18,7 +18,7 @@ class TrainUpdater:
 	# get_next_trains pings the MTA API for the most up-to-date train arrivals at Bedford Ave
 	def get_next_trains(self):
 		try:
-			resp = requests.get(URL, headers={"x-api-key": key})
+			resp = requests.get(self.URL, headers={"x-api-key": self.key})
 			timestamp = time.Time()
 
 			message = gtfs_realtime_pb2.FeedMessage()
@@ -38,12 +38,12 @@ class TrainUpdater:
 			return parse_trips_to_bedford(trips_to_bedford)
 		except Exception as e:
 			logging.error(e)
-			return null, null
+			return None, None
 
 
 	# parse_trip_update parses a trip_update entity in the GTFS feed response.
 	# if the trip specified in the trip_update stops at Bedford Av, it returns
-	# a Trip object. If the trip_update does not stop at Bedford Av, it returns null.
+	# a Trip object. If the trip_update does not stop at Bedford Av, it returns None.
 	def parse_trip_update(trip_update):
 		direction = trip_update.trip.nyct_trip_descriptor.direction
 		final_stop_id = ""
@@ -58,14 +58,14 @@ class TrainUpdater:
 				next_train_at_bedford = stop_time_update.arrival.time
 
 		if next_train_at_bedford == 0:
-			return null
+			return None
 		else:
 			return Trip(final_stop_id, direction, next_train_at_bedford)
 
 
 	# parse_trips_to_bedford returns the soonest trips in each direction (North and South)
 	# that stops at Bedford Av.
-	# if there are no trips to be found for one of the directions, return null for that direction.
+	# if there are no trips to be found for one of the directions, return None for that direction.
 	def parse_trips_to_bedford(trips_to_bedford):
 		northbound_trips = filter(lambda x: x.direction == constants.DIRECTION_NORTH, trips_to_bedford)
 		southbound_trips = filter(lambda x: x.direction == constants.DIRECTION_SOUTH, trips_to_bedford)
@@ -73,8 +73,8 @@ class TrainUpdater:
 		sorted_northbound_trips = sorted(northbound_trips, key=lambda x: x.next_train)
 		sorted_southbound_trips = sorted(southbound_trips, key=lambda x: x.next_train)
 
-		next_northbound_train = sorted_northbound_trips[0] if len(sorted_northbound_trips) > 0 else null
-		next_southbound_train = sorted_southbound_trips[0] if len(sorted_southbound_trips) > 0 else null
+		next_northbound_train = sorted_northbound_trips[0] if len(sorted_northbound_trips) > 0 else None
+		next_southbound_train = sorted_southbound_trips[0] if len(sorted_southbound_trips) > 0 else None
 
 		return (next_northbound_train, next_southbound_train)
 
