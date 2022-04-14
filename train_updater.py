@@ -38,7 +38,7 @@ class TrainUpdater:
                     parsed_trip = self.parse_trip_update(trip_update)
                     if parsed_trip:
                         trips_to_bedford.append(parsed_trip)
-                        
+
             return self.parse_trips_to_bedford(trips_to_bedford)
         except Exception as e:
             print("exception", e)
@@ -50,7 +50,6 @@ class TrainUpdater:
     # a Trip object. If the trip_update does not stop at Bedford Av, it returns None.
     def parse_trip_update(self, trip_update):
         direction = trip_update.trip.Extensions[nyct_subway_pb2.nyct_trip_descriptor].direction
-
         final_stop_id = ""
         max_stop_sequence = 0
         next_train_at_bedford = 0
@@ -72,8 +71,8 @@ class TrainUpdater:
     # that stops at Bedford Av.
     # if there are no trips to be found for one of the directions, return None for that direction.
     def parse_trips_to_bedford(self, trips_to_bedford):
-        northbound_trips = filter(lambda x: x.direction == Direction.NORTH, trips_to_bedford)
-        southbound_trips = filter(lambda x: x.direction == Direction.SOUTH, trips_to_bedford)
+        northbound_trips = filter(lambda x: x.direction == Direction.NORTH.value, trips_to_bedford)
+        southbound_trips = filter(lambda x: x.direction == Direction.SOUTH.value, trips_to_bedford)
 
         sorted_northbound_trips = sorted(northbound_trips, key=lambda x: x.next_train)
         sorted_southbound_trips = sorted(southbound_trips, key=lambda x: x.next_train)
