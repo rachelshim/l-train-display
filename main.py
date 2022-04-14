@@ -52,7 +52,7 @@ def run():
     matrix = RGBMatrix(options=options)
 
     dir_font = graphics.Font()
-    dir_font.LoadFont("5x8.bdf")
+    dir_font.LoadFont("4x6.bdf")
     time_font = graphics.Font()
     time_font.LoadFont("5x8.bdf")
 
