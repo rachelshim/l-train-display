@@ -55,10 +55,10 @@ def run():
         manh, bkln = train_updater.get_next_trains()
         canvas.Clear()
 
-        manh_terminus = manh.terminus if manh else "--"
-        bkln_terminus = bkln.terminus if bkln else "--"
-        manh_next_train = manh.next_train if manh else 0
-        bkln_next_train = bkln.next_train if bkln else 0
+        manh_terminus = manh.terminus if manh else "manh"
+        bkln_terminus = bkln.terminus if bkln else "bkln"
+        manh_next_train = str(manh.next_train) if manh else "--"
+        bkln_next_train = str(bkln.next_train) if bkln else "--"
 
         draw_l_train_logo(2, 3, canvas)
         draw_l_train_logo(2, 18, canvas)
@@ -66,7 +66,7 @@ def run():
         graphics.DrawText(canvas, dir_font, 14, 27, font_color, bkln_terminus)
 
         manhattan_offset = 37 if len(manh_next_train) == 5 else 42
-                brooklyn_offset = 37 if len(bkln_next_train) == 5 else 42
+        brooklyn_offset = 37 if len(bkln_next_train) == 5 else 42
 
         graphics.DrawText(canvas, time_font, manhattan_offset, 12, font_color, manh_next_train)
         graphics.DrawText(canvas, time_font, brooklyn_offset, 27, font_color, bkln_next_train)
