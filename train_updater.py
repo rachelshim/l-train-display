@@ -16,7 +16,7 @@ class TrainUpdater:
 			self.next_train = next_train
 
 	# get_next_trains pings the MTA API for the most up-to-date train arrivals at Bedford Ave
-	def get_next_trains():
+	def get_next_trains(self):
 		try:
 			resp = requests.get(URL, headers={"x-api-key": key})
 			timestamp = time.Time()
