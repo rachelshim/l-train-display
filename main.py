@@ -116,6 +116,9 @@ if __name__ == "__main__":
     pos_manh = 14
     pos_bkln = 14
 
+    manh_hold = 50
+    bkln_hold = 50
+
     try:
         # display_thread = threading.Thread(target=update_display, name="display_thread")
         while True:
@@ -126,11 +129,32 @@ if __name__ == "__main__":
 
             manh_len = graphics.DrawText(canvas, dir_font, pos_manh, 12, font_color, "14 St-Union Sq")
             bkln_len = graphics.DrawText(canvas, dir_font, pos_bkln, 27, font_color, "Canarsie-Rockaway Pkwy")
-            pos -= 1
-            if (pos_manh + manh_len < 14):
+            
+
+            if manh_hold > 0:
                 pos_manh = 14
-            if (pos_bkln + bkln_len < 14):
+                manh_hold -= 1
+            elif pos_manh + manh_len < 14:
+                pos_manh = 14
+                manh_hold = 40
+            else:
+                pos_manh -= 1
+
+            if bkln_hold > 0:
                 pos_bkln = 14
+                bkln_hold -= 1
+            elif pos_bkln + bkln_len < 14:
+                pos_bkln = 14
+                bkln_hold = 40
+            else:
+                pos_bkln -= 1
+            
+            for y in range(0, 32):
+                for x in range(0, 14):
+                    canvas.SetPixel(x, y, 0, 0, 0)
+
+            draw_l_train_logo(2, 3, canvas)
+            draw_l_train_logo(2, 18, canvas)
             time.sleep(0.05)
             canvas = matrix.SwapOnVSync(canvas)
 
