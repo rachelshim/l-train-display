@@ -127,27 +127,53 @@ if __name__ == "__main__":
             draw_l_train_logo(2, 3, canvas)
             draw_l_train_logo(2, 18, canvas)
 
-            manh_len = graphics.DrawText(canvas, dir_font, pos_manh, 12, font_color, "14 St-Union Sq")
-            bkln_len = graphics.DrawText(canvas, dir_font, pos_bkln, 27, font_color, "Canarsie-Rockaway Pkwy")
-            
+            manh_text = "14 St-Union Sq"
+            bkln_text = "Canarsie-Rockaway Pkwy"
+
+            buffer_text = 8
+
+            pos_A = 14
+            pos_B = pos_A + buffer_text + 5*len(manh_text)
+
+            len_A = graphics.DrawText(canvas, dir_font, pos_A, 11, font_color, manh_text)
+            len_B = graphics.DrawText(canvas, dir_font, pos_B, 11, font_color, manh_text)
 
             if manh_hold > 0:
-                pos_manh = 14
                 manh_hold -= 1
-            elif pos_manh + manh_len < 14:
-                pos_manh = 14
-                manh_hold = 40
+            elif pos_A + len_A < 14:
+                pos_B -= 1
+                pos_A = pos_B + buffer_text + 5*len(manh_text)
+            elif pos_B + len_B < 14:
+                pos_A -= 1
+                pos_B = pos_A + buffer_text + 5*len(manh_text)
             else:
-                pos_manh -= 1
+                pos_A -= 1
+                pos_B -= 1
 
-            if bkln_hold > 0:
-                pos_bkln = 14
-                bkln_hold -= 1
-            elif pos_bkln + bkln_len < 14:
-                pos_bkln = 14
-                bkln_hold = 40
-            else:
-                pos_bkln -= 1
+            if pos_A == 14 or pos_B == 14:
+                manh_hold = 50
+
+            # manh_len = graphics.DrawText(canvas, dir_font, pos_manh, 11, font_color, "14 St-Union Sq")
+            # bkln_len = graphics.DrawText(canvas, dir_font, pos_bkln, 27, font_color, "Canarsie-Rockaway Pkwy")
+            
+
+            # if manh_hold > 0:
+            #     pos_manh = 14
+            #     manh_hold -= 1
+            # elif pos_manh + manh_len < 14:
+            #     pos_manh = 14
+            #     manh_hold = 40
+            # else:
+            #     pos_manh -= 1
+
+            # if bkln_hold > 0:
+            #     pos_bkln = 14
+            #     bkln_hold -= 1
+            # elif pos_bkln + bkln_len < 14:
+            #     pos_bkln = 14
+            #     bkln_hold = 40
+            # else:
+            #     pos_bkln -= 1
             
             for y in range(0, 32):
                 for x in range(0, 14):
