@@ -32,3 +32,46 @@ L_STOPS = {
 	"L29": "Canarsie-Rockaway Pkwy"
 }
 
+
+# constants for TrainDisplayer
+
+FONT_WIDTH = 5
+FONT_HEIGHT = 8
+
+DISPLAY_SCROLL_SPEED = 0.05
+TEXT_HOLD_TIME_SECONDS = 2.5 
+
+# the space between the wrap-around for the text, in pixels
+TEXT_SPACER = 12
+
+# display is a 64x32 LED board.
+# assuming pixels at positions [0, 63], across the x-axis we have the pixels
+# set up as follows:
+# [0, 1] spacer
+# [2, 11] train logo
+# [12, 13] spacer
+# [14, 49] text
+# [50, 51] spacer
+# [52, 61] time in min
+# [62, 63] spacer
+
+SPACERS = [
+	(0, 1),
+	(12, 13),
+	(50, 51),
+	(62, 63)
+]
+
+L_LOGO_X = 2
+L_LOGO_Y_TOP = 3
+L_LOGO_Y_BOTTOM = 18
+
+TEXT_MARGIN_LEFT = 14
+TEXT_MARGIN_RIGHT = 50
+
+MIN_X = 52
+MIN_Y_TOP = 12
+MIN_Y_BOTTOM = 28
+
+TOP_Y_POS = 11
+BOTTOM_Y_POS = 27

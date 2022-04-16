@@ -1,7 +1,6 @@
 #!/usr/bin/python3
-import datetime, requests, time
+import requests
 import gtfs_realtime_pb2, nyct_subway_pb2
-import logging
 from enum import Enum
 import constants
 
@@ -81,6 +80,4 @@ class TrainUpdater:
         next_southbound_train = sorted_southbound_trips[0] if len(sorted_southbound_trips) > 0 else None
 
         return (next_northbound_train, next_southbound_train)
-
-
 
