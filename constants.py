@@ -42,7 +42,7 @@ DISPLAY_SCROLL_SPEED = 0.05
 TEXT_HOLD_TIME_SECONDS = 2.5 
 
 # the space between the wrap-around for the text, in pixels
-TEXT_SPACER = 12
+TEXT_SPACER = 10
 
 # display is a 64x32 LED board.
 # assuming pixels at positions [0, 63], across the x-axis we have the pixels
@@ -50,15 +50,15 @@ TEXT_SPACER = 12
 # [0, 1] spacer
 # [2, 11] train logo
 # [12, 13] spacer
-# [14, 49] text
-# [50, 51] spacer
+# [14, 48] text
+# [49, 51] spacer
 # [52, 61] time in min
 # [62, 63] spacer
 
 # every section that's not part of the scrolling text must be cleared
 VERTICAL_SPACERS = [
 	(0, 13),
-	(50, 63)
+	(49, 63)
 ]
 
 L_LOGO_X = 2

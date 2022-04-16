@@ -67,11 +67,12 @@ class TrainDisplayer:
 
         if pos_map["hold"] > 0:
             pos_map["hold"] -= 1
-        elif pos_map["pos_A"] + len_top_A + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT + 1:
+        elif pos_map["pos_A"] + len_top_A + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT + 2:
+            # idk why the offset by 2 is needed but that's for future Rachel to figure out
             pos_map["hold"] = constants.TEXT_HOLD_TIME_SECONDS/constants.DISPLAY_SCROLL_SPEED
             pos_map["pos_B"] -= 1
             pos_map["pos_A"] = pos_map["pos_B"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(text)
-        elif pos_map["pos_B"] + len_top_B + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT + 1:
+        elif pos_map["pos_B"] + len_top_B + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT + 2:
             pos_map["hold"] = constants.TEXT_HOLD_TIME_SECONDS/constants.DISPLAY_SCROLL_SPEED
             pos_map["pos_A"] -= 1
             pos_map["pos_B"] = pos_map["pos_A"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(text)
