@@ -7,6 +7,9 @@ It uses the [MTA's GTFS Realtime feed](https://api.mta.info/#/landing) and [rpi-
 
 I relied heavily on [this tutorial](https://howchoo.com/pi/raspberry-pi-led-matrix-panel) to set up the LED matrix and the Rapberry Pi.
 
+## Notes
+When reviewing the code please keep in mind that the vast majority of it was written between the hours of 1am and 3am
+
 ### Tests
 If it breaks it breaks 😔🤟
 
