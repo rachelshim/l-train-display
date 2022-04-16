@@ -16,6 +16,6 @@ if __name__ == "__main__":
 			displayer.update_display(constants.L_STOPS["L01"], constants.L_STOPS["L29"], 3, 15)
 			time.sleep(constants.DISPLAY_SCROLL_SPEED)
 		
-		except KeyboardInterrupt:
-			print("Exiting l-train-display...")
-			sys.exit(0)
+	except KeyboardInterrupt:
+		print("Exiting l-train-display...")
+		sys.exit(0)
