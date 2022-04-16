@@ -71,7 +71,7 @@ class TrainDisplayer:
             pos_map["hold"] = constants.TEXT_HOLD_TIME_SECONDS/constants.DISPLAY_SCROLL_SPEED
             pos_map["pos_B"] -= 1
             pos_map["pos_A"] = pos_map["pos_B"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(text)
-        elif pos_map["pos_B"] + len_top_B + constants.TEXT_SPACER < const.TEXT_MARGIN_LEFT:
+        elif pos_map["pos_B"] + len_top_B + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT:
             pos_map["hold"] = constants.TEXT_HOLD_TIME_SECONDS/constants.DISPLAY_SCROLL_SPEED
             pos_map["pos_A"] -= 1
             pos_map["pos_B"] = pos_map["pos_A"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(text)
@@ -88,14 +88,14 @@ class TrainDisplayer:
         if constants.FONT_WIDTH * len(top_text) > constants.TEXT_MARGIN_RIGHT - constants.TEXT_MARGIN_LEFT:
             if self.top_text_pos["pos_B"] is None:
                 self.top_text_pos["pos_B"] = self.top_text_pos["pos_A"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(top_text)
-            self.display_scrolling_text(top_text, top_text_pos, constants.TOP_Y_POS)
+            self.display_scrolling_text(top_text, self.top_text_pos, constants.TOP_Y_POS)
         else:
             graphics.DrawText(self.canvas, self.font, constants.TEXT_MARGIN_LEFT, constants.TOP_Y_POS, self.font_color, top_text)
 
         if constants.FONT_WIDTH * len(bottom_text) > constants.TEXT_MARGIN_RIGHT - constants.TEXT_MARGIN_LEFT:
             if self.bottom_text_pos["pos_B"] is None:
                 self.bottom_text_pos["pos_B"] = self.bottom_text_pos["pos_A"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(bottom_text)
-            self.display_scrolling_text(bottom_text, bottom_text_pos, constants.BOTTOM_Y_POS)
+            self.display_scrolling_text(bottom_text, self.bottom_text_pos, constants.BOTTOM_Y_POS)
         else:
             graphics.DrawText(self.canvas, self.font, constants.TEXT_MARGIN_LEFT, constants.BOTTOM_Y_POS, self.font_color, bottom_text)
 

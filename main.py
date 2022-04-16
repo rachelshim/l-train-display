@@ -13,7 +13,7 @@ if __name__ == "__main__":
 
 	try:
 		while True:
-			displayer.update_display(constants.L_STOPS["L01"], constants.L_STOPS["L29"], 3, 15)
+			displayer.update_display(constants.L_STOPS["L01"], constants.L_STOPS["L29"], "3", "15")
 			time.sleep(constants.DISPLAY_SCROLL_SPEED)
 		
 	except KeyboardInterrupt:
