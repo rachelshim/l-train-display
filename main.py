@@ -119,40 +119,33 @@ if __name__ == "__main__":
     manh_hold = 50
     bkln_hold = 50
 
+    manh_text = "14 St-Union Sq"
+    buffer_text = 15
+
+    pos_A = 14
+    pos_B = pos_A + buffer_text + 5*len(manh_text)
+
     try:
         # display_thread = threading.Thread(target=update_display, name="display_thread")
         while True:
             canvas.Clear()
-
-            draw_l_train_logo(2, 3, canvas)
-            draw_l_train_logo(2, 18, canvas)
-
-            manh_text = "14 St-Union Sq"
-            bkln_text = "Canarsie-Rockaway Pkwy"
-
-            buffer_text = 8
-
-            pos_A = 14
-            pos_B = pos_A + buffer_text + 5*len(manh_text)
 
             len_A = graphics.DrawText(canvas, dir_font, pos_A, 11, font_color, manh_text)
             len_B = graphics.DrawText(canvas, dir_font, pos_B, 11, font_color, manh_text)
 
             if manh_hold > 0:
                 manh_hold -= 1
-            elif pos_A + len_A < 14:
+            elif pos_A + len_A + buffer_text < 15:
+                manh_hold = 50
                 pos_B -= 1
                 pos_A = pos_B + buffer_text + 5*len(manh_text)
-            elif pos_B + len_B < 14:
+            elif pos_B + len_B + buffer_text < 15:
+                manh_hold = 50
                 pos_A -= 1
                 pos_B = pos_A + buffer_text + 5*len(manh_text)
             else:
                 pos_A -= 1
                 pos_B -= 1
-
-            if pos_A == 14 or pos_B == 14:
-                manh_hold = 50
-
             # manh_len = graphics.DrawText(canvas, dir_font, pos_manh, 11, font_color, "14 St-Union Sq")
             # bkln_len = graphics.DrawText(canvas, dir_font, pos_bkln, 27, font_color, "Canarsie-Rockaway Pkwy")
             
