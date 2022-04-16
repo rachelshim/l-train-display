@@ -55,11 +55,10 @@ TEXT_SPACER = 12
 # [52, 61] time in min
 # [62, 63] spacer
 
-SPACERS = [
-	(0, 1),
-	(12, 13),
-	(50, 51),
-	(62, 63)
+# every section that's not part of the scrolling text must be cleared
+VERTICAL_SPACERS = [
+	(0, 13),
+	(50, 63)
 ]
 
 L_LOGO_X = 2
@@ -70,8 +69,8 @@ TEXT_MARGIN_LEFT = 14
 TEXT_MARGIN_RIGHT = 50
 
 MIN_X = 52
-MIN_Y_TOP = 12
-MIN_Y_BOTTOM = 28
+MIN_Y_TOP = 11
+MIN_Y_BOTTOM = 27
 
 TOP_Y_POS = 11
 BOTTOM_Y_POS = 27

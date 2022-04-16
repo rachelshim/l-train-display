@@ -67,11 +67,11 @@ class TrainDisplayer:
 
         if pos_map["hold"] > 0:
             pos_map["hold"] -= 1
-        elif pos_map["pos_A"] + len_top_A + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT:
+        elif pos_map["pos_A"] + len_top_A + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT + 1:
             pos_map["hold"] = constants.TEXT_HOLD_TIME_SECONDS/constants.DISPLAY_SCROLL_SPEED
             pos_map["pos_B"] -= 1
             pos_map["pos_A"] = pos_map["pos_B"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(text)
-        elif pos_map["pos_B"] + len_top_B + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT:
+        elif pos_map["pos_B"] + len_top_B + constants.TEXT_SPACER < constants.TEXT_MARGIN_LEFT + 1:
             pos_map["hold"] = constants.TEXT_HOLD_TIME_SECONDS/constants.DISPLAY_SCROLL_SPEED
             pos_map["pos_A"] -= 1
             pos_map["pos_B"] = pos_map["pos_A"] + constants.TEXT_SPACER + constants.FONT_WIDTH * len(text)
@@ -100,7 +100,7 @@ class TrainDisplayer:
             graphics.DrawText(self.canvas, self.font, constants.TEXT_MARGIN_LEFT, constants.BOTTOM_Y_POS, self.font_color, bottom_text)
 
         # draw spacers. for more info, see constants.py
-        for spacer in constants.SPACERS:
+        for spacer in constants.VERTICAL_SPACERS:
             self.draw_vertical_spacer(spacer[0], spacer[1])
 
         # draw logo
