@@ -3,9 +3,9 @@
 import datetime, requests, time
 import gtfs_realtime_pb2, nyct_subway_pb2
 import logging
+import mta_api_key
 
 URL = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
-key = "" # add MTA API key here
 
 # set up logging
 logging.basicConfig(filename="trains.log", level=logging.DEBUG)
@@ -24,8 +24,9 @@ def parse_timestamp(timestamp):
 	return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
 def get_next_trains():
+    print(mta_api_key.key)
 	try:
-		resp = requests.get(URL, headers={"x-api-key": key})
+		resp = requests.get(URL, headers={"x-api-key": mta_api_key.key})
 
 		timestamp = time.time()
 
@@ -60,5 +61,5 @@ def get_next_trains():
 		return manhattan_in, brooklyn_in
 
 	except Exception as e:
-		logging.error(e)
+		print(e)
 		return "--", "--"
