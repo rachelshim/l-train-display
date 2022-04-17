@@ -24,7 +24,6 @@ def parse_timestamp(timestamp):
     return datetime.datetime.fromtimestamp(timestamp).strftime("%Y-%m-%d %H:%M:%S")
 
 def get_next_trains():
-    print(mta_api_key.key)
     try:
         resp = requests.get(URL, headers={"x-api-key": mta_api_key.key})
 
