@@ -53,7 +53,7 @@ class TrainDisplayer:
                     self.canvas.SetPixel(x + i, y + j, 117, 119, 122)
 
 
-    # draws black rectangle for a vertial section of the matrix
+    # draws black rectangle for a vertical section of the matrix
     # essentially, clearing the board for a subsection.
     def draw_vertical_spacer(self, left, right):
         for y in range(0, 32):
@@ -84,6 +84,11 @@ class TrainDisplayer:
     def update_display(self, top_text, bottom_text, top_min, bottom_min):
         self.canvas.Clear()
 
+        # we have to draw the display in order: text, then vertical spacers, then next train time, then logo.
+        # this is because the color of each pixel can be overwritten before it's displayed.
+        # there's not a way to limit the area of the scrolling text, so we get around this by painting
+        # black pixels (which essentially means empty LEDs on the matrix) around the areas we want the text to not be displayed.
+
         # first check if top/bottom text is long enough to warrant scrolling
         # draw text
         if constants.FONT_WIDTH * len(top_text) > constants.TEXT_MARGIN_RIGHT - constants.TEXT_MARGIN_LEFT:
@@ -108,7 +113,7 @@ class TrainDisplayer:
         self.draw_l_train_logo(constants.L_LOGO_X, constants.L_LOGO_Y_TOP)
         self.draw_l_train_logo(constants.L_LOGO_X, constants.L_LOGO_Y_BOTTOM)
 
-        # draw min
+        # draw min to next train
         graphics.DrawText(self.canvas, self.font, constants.MIN_X, constants.MIN_Y_TOP, self.font_color, top_min)
         graphics.DrawText(self.canvas, self.font, constants.MIN_X, constants.MIN_Y_BOTTOM, self.font_color, bottom_min)
 

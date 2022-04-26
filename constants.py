@@ -2,6 +2,8 @@
 
 MTA_API_URL = "https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/nyct%2Fgtfs-l"
 
+TRAIN_UPDATE_RATE_SECONDS = 20
+
 BEDFORD_AV_NORTH = "L08N"
 BEDFORD_AV_SOUTH = "L08S"
 
