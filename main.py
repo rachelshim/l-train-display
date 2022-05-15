@@ -1,74 +1,77 @@
 #!/usr/bin/python3
 
-import time, sys
-from rgbmatrix import graphics, RGBMatrix, RGBMatrixOptions
-from train_updater import get_next_trains
-import logging
+import time, sys, threading
+from train_updater import TrainUpdater, Trip, Direction
+from train_displayer import TrainDisplayer
+import mta_api_key
+import constants
 
-# set up logging
-logging.basicConfig(filename="main.log", level=logging.DEBUG)
+updater = TrainUpdater(constants.MTA_API_URL, mta_api_key.key)
+displayer = TrainDisplayer("5x8.bdf")
 
-# drawing 10x10 L train logo
-def draw_l_train_logo(x, y, canvas):
-    for j in range(3):
-        offset = j + 1
-        for i in range(offset, 10 - offset):
-            canvas.SetPixel(x + i, y + 2 - j, 117, 119, 122)
-            canvas.SetPixel(x + i, y + 8 + j, 117, 119, 122)
-    for j in range(3, 8):
-        for i in range(10):
-            if i == 4:
-                canvas.SetPixel(x + i, y + j, 255, 255, 255)
-            elif j == 7 and (i == 5 or i == 6):
-                canvas.SetPixel(x + i, y + j, 255, 255, 255)
-            else:
-                canvas.SetPixel(x + i, y + j, 117, 119, 122)
+lock = threading.Lock()
+next_trains_trip = {
+    "North": None,
+    "South": None
+}
 
-def run():
-    logging.info("Starting l-train-display.")
+def parse_arrival_time(arrival):
+    now = time.time()
+    arrival_in_min = round((arrival - now)/60)
+    if arrival_in_min < -5:
+        return "-"
+    else:
+        return str(arrival_in_min)
 
-    options = RGBMatrixOptions()
-    options.rows = 32
-    options.cols = 64
-    options.chain_length = 1
-    options.parallel = 1
-    options.hardware_mapping = "adafruit-hat"
-
-    matrix = RGBMatrix(options=options)
-
-    dir_font = graphics.Font()
-    dir_font.LoadFont("5x8.bdf")
-    time_font = graphics.Font()
-    time_font.LoadFont("5x8.bdf")
-
-    l_train_color = graphics.Color(167, 169, 172)
-    font_color = graphics.Color(250, 200, 50)
-
-    canvas = matrix.CreateFrameCanvas()
-
+def parse_trips_and_update_display():
     while True:
-        manhattan_in, brooklyn_in = get_next_trains()
-        canvas.Clear()
+        lock.acquire()
+        trip_north = next_trains_trip["North"]
+        trip_south = next_trains_trip["South"]
+        lock.release()
 
-        draw_l_train_logo(2, 3, canvas)
-        draw_l_train_logo(2, 18, canvas)
-        graphics.DrawText(canvas, dir_font, 14, 12, font_color, "MANH")
-        graphics.DrawText(canvas, dir_font, 14, 27, font_color, "BKLN")
+        north_stop = "No Trains"
+        south_stop = "No Trains"
+        north_time = "-"
+        south_time = "-"
+        if trip_north is not None:
+            north_stop = constants.L_STOPS[trip_north.terminus[:-1]]
+            north_time = parse_arrival_time(trip_north.next_train)
+        if trip_south is not None:
+            south_stop = constants.L_STOPS[trip_south.terminus[:-1]]
+            south_time = parse_arrival_time(trip_south.next_train)
 
-        manhattan_offset = 37 if len(manhattan_in) == 5 else 42
-        brooklyn_offset = 37 if len(brooklyn_in) == 5 else 42
+        displayer.update_display(north_stop, south_stop, north_time, south_time)
+        time.sleep(constants.DISPLAY_SCROLL_SPEED)
 
-        graphics.DrawText(canvas, time_font, manhattan_offset, 12, font_color, manhattan_in)
-        graphics.DrawText(canvas, time_font, brooklyn_offset, 27, font_color, brooklyn_in)
-        canvas = matrix.SwapOnVSync(canvas)
+def update_next_trains():
+    while True:
+        train_north, train_south = updater.get_next_trains()
+        lock.acquire()
+        next_trains_trip["North"] = train_north
+        next_trains_trip["South"] = train_south
+        lock.release()
 
-        time.sleep(30)
+        time.sleep(constants.TRAIN_UPDATE_RATE_SECONDS)
 
 
 if __name__ == "__main__":
+    # TODO set up a decent logger
+    print("Starting l-train-display...")
+
     try:
-        run()
+        display_thread = threading.Thread(target=parse_trips_and_update_display)
+        update_thread = threading.Thread(target=update_next_trains)
+        display_thread.setDaemon(True)
+        update_thread.setDaemon(True)
+
+        display_thread.start()
+        update_thread.start()
+        while True:
+            pass
+
     except KeyboardInterrupt:
-        logging.info("Exiting l-train-display\n")
+        display_thread.stop()
+        update_thread.stop()
+        print("Exiting l-train-display...")
         sys.exit(0)
-        
