@@ -3,6 +3,7 @@ import requests
 import gtfs_realtime_pb2, nyct_subway_pb2
 from enum import Enum
 import constants
+import logging
 
 class Direction(Enum):
     NORTH = 1
@@ -40,7 +41,7 @@ class TrainUpdater:
 
             return self.parse_trips_to_bedford(trips_to_bedford)
         except Exception as e:
-            print("exception", e)
+            logging.exception("Failure getting next trains")
             return None, None
 
 
