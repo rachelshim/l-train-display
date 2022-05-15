@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-import time, sys, threading
+import time, sys, threading, logging
 from train_updater import TrainUpdater, Trip, Direction
 from train_displayer import TrainDisplayer
 import mta_api_key
@@ -57,7 +57,8 @@ def update_next_trains():
 
 if __name__ == "__main__":
     # TODO set up a decent logger
-    print("Starting l-train-display...")
+    logging.basicConfig(filename='main.log', level=logging.INFO)
+    logging.info("Starting l-train-display...")
 
     try:
         display_thread = threading.Thread(target=parse_trips_and_update_display)
@@ -73,5 +74,5 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         display_thread.stop()
         update_thread.stop()
-        print("Exiting l-train-display...")
+        logging.info("Exiting l-train-display...")
         sys.exit(0)
