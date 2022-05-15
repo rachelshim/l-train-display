@@ -73,4 +73,4 @@ if __name__ == "__main__":
         display_thread.stop()
         update_thread.stop()
         print("Exiting l-train-display...")
-        sys.exit(0)
+        sys.exit(1)
