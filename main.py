@@ -25,10 +25,9 @@ def parse_arrival_time(arrival):
 
 def parse_trips_and_update_display():
     while True:
-        lock.acquire()
-        trip_north = next_trains_trip["North"]
-        trip_south = next_trains_trip["South"]
-        lock.release()
+        with lock:
+            trip_north = next_trains_trip["North"]
+            trip_south = next_trains_trip["South"]
 
         north_stop = "No Trains"
         south_stop = "No Trains"
