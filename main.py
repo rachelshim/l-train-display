@@ -47,10 +47,9 @@ def parse_trips_and_update_display():
 def update_next_trains():
     while True:
         train_north, train_south = updater.get_next_trains()
-        lock.acquire()
-        next_trains_trip["North"] = train_north
-        next_trains_trip["South"] = train_south
-        lock.release()
+        with lock:
+            trip_north = next_trains_trip["North"]
+            trip_south = next_trains_trip["South"]
 
         time.sleep(constants.TRAIN_UPDATE_RATE_SECONDS)
 
