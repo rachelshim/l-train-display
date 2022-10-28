@@ -15,13 +15,18 @@ next_trains_trips = {
     "South": []
 }
 
-def parse_arrival_time(arrival):
+def parse_singular_arrival_time(arrival):
     now = time.time()
     arrival_in_min = round((arrival - now)/60)
-    if arrival_in_min < -5:
-        return "-"
-    else:
-        return str(arrival_in_min)
+    return str(arrival_in_min)
+
+def parse_arrival_times(first_arrival, second_arrival):
+    now = time.time()
+    first_arrival_in_min = round((first_arrival - now)/60)
+    second_arrival_in_min = round((second_arrival - now)/60)
+    if first_arrival_in_min > 9 or second_arrival_in_min > 9:
+        return str(first_arrival_in_min)
+    return str(first_arrival_in_min) + "," + str(second_arrival_in_min)
 
 def parse_trips_and_update_display():
     while True:
@@ -35,18 +40,26 @@ def parse_trips_and_update_display():
         south_time = "-"
 
         if trips_north:
+            # TODO clean this up and refactor out so there's no duplication
             # loop to find next most trip that's after current time.
-            for trip in trips_north:
+            for x in range(len(trips_north)):
+                trip = trips_north[x]
                 if trip.next_train > time.time():
-                    north_stop = constants.L_STOPS[trip.terminus[:-1]]
+                    north_stop = constants.L_STOPS[trip.terminus[:-1]]  # need to strip string: L01N -> L01
                     north_time = parse_arrival_time(trip.next_train)
-                    break
+
+                    # if north_time is less than 2 characters, we can display two times
+                    if len(north_time) < 2 and north_time != "-":
+                        if x + 1 < len(trips_north):
+                            second_north_time = parse_arrival_time(trips_north[x + 1].next_train)
+                            if len(second_north_time) < 2 and second_north_time != "-":
+                                north_time = north_time + "," + second_north_time
+
         if trips_south:
             for trip in trips_south:
                 if trip.next_train > time.time():
-                    south_stop = constants.L_STOPS[trip.terminus[:-1]]
-                    south_time = parse_arrival_time(trip.next_train)
-                    break
+                    south_stop = constants.L_STOPS[trips_south.terminus[:-1]]   # need to strip string: L01S -> L01
+                    south_time = parse_arrival_time(trips_south.next_train)
 
         displayer.update_display(north_stop, south_stop, north_time, south_time)
         time.sleep(constants.DISPLAY_SCROLL_SPEED)
