@@ -38,7 +38,7 @@ If you would like to set up something similar, or if you happen to also live nea
 
 ### Future work
 - error handling: pretty sure that if wifi is bad the loop blocks on the API call. maybe add timeouts?
-- store expected times for the next _n_ trains (as opposed to next train) to fall back on in an error scenario, i.e. when call to API fails or returns empty data
+- WIP ~~store expected times for the next _n_ trains (as opposed to next train) to fall back on in an error scenario, i.e. when call to API fails or returns empty data~~
 - one thread to grab times from API and one thread to update display doesn't really work. this is because the display update thread is used for scrolling the text, and if there's a blip there can be weird text scrolling for a bit (noticed recently it showed two halves of different station names). really it should be something like:
     * one thread to grab times from API
     * one thread to scroll text display
@@ -46,7 +46,7 @@ If you would like to set up something similar, or if you happen to also live nea
    
   All of this is probably confusing. what I mean is -- scrolling logic should be separate from deciding what text to display on the screen.
 - fix logging (this is mainly due to the fact that i've never used real logging in python)
-- the display shows 0 whenever the train is <30 seconds away or `arrival time - current time < 0`. Should show the actual next train time as opposed to "current" train which has left the station. This is because when going through the list of train arrivals, it looks for the earliest one and sometimes (by the time we get the data) the earliest one has already left the station. Storing arrival times for _n_ trains rather than just one should help with this.
+- WIP ~~the display shows 0 whenever the train is <30 seconds away or `arrival time - current time < 0`. Should show the actual next train time as opposed to "current" train which has left the station. This is because when going through the list of train arrivals, it looks for the earliest one and sometimes (by the time we get the data) the earliest one has already left the station. Storing arrival times for _n_ trains rather than just one should help with this.~~
 - show next 2 trains, as opposed to showing just the next train. might require some thinking on how to display this, the LED board is kind small.
 - make L train logo look nicer. right now it's very blocky (and kind of ratch -- uses a loop to color pixels; this probably could've been done with DrawCircle, or something).
 - rewrite the whole thing in golang (lmao)
