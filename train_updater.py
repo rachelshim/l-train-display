@@ -42,7 +42,7 @@ class TrainUpdater:
             return self.parse_trips_to_bedford(trips_to_bedford)
         except Exception as e:
             print("exception", e)
-            return None, None
+            return [], []
 
 
     # parse_trip_update parses a trip_update entity in the GTFS feed response.
