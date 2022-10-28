@@ -53,9 +53,10 @@ def update_next_trains():
     while True:
         trains_north, trains_south = updater.get_next_trains()
         with lock:
-            next_trains_trips["North"] = trains_north
-            next_trains_trips["South"] = trains_south
-
+            if trains_north:
+                next_trains_trips["North"] = trains_north
+            if trains_south:
+                next_trains_trips["South"] = trains_south
         time.sleep(constants.TRAIN_UPDATE_RATE_SECONDS)
 
 
