@@ -10,9 +10,9 @@ updater = TrainUpdater(constants.MTA_API_URL, mta_api_key.key)
 displayer = TrainDisplayer("5x8.bdf")
 
 lock = threading.Lock()
-next_trains_trip = {
-    "North": None,
-    "South": None
+next_trains_trips = {
+    "North": [],
+    "South": []
 }
 
 def parse_arrival_time(arrival):
@@ -26,29 +26,35 @@ def parse_arrival_time(arrival):
 def parse_trips_and_update_display():
     while True:
         with lock:
-            trip_north = next_trains_trip["North"]
-            trip_south = next_trains_trip["South"]
+            trips_north = next_trains_trips["North"]
+            trips_south = next_trains_trips["South"]
 
-        north_stop = "No Trains"
-        south_stop = "No Trains"
+        north_stop = "No Trips"
+        south_stop = "No Trips"
         north_time = "-"
         south_time = "-"
-        if trip_north is not None:
-            north_stop = constants.L_STOPS[trip_north.terminus[:-1]]
-            north_time = parse_arrival_time(trip_north.next_train)
-        if trip_south is not None:
-            south_stop = constants.L_STOPS[trip_south.terminus[:-1]]
-            south_time = parse_arrival_time(trip_south.next_train)
+
+        if trips_north:
+            # loop to find next most trip that's after current time.
+            for trip in trips_north:
+                if trip.next_train > time.time():
+                    north_stop = constants.L_STOPS[trip.terminus[:-1]]
+                    north_time = parse_arrival_time(trip.next_train)
+        if trips_south:
+            for trip in trips_south:
+                if trip.next_train > time.time():
+                    south_stop = constants.L_STOPS[trips_south.terminus[:-1]]
+                    south_time = parse_arrival_time(trips_south.next_train)
 
         displayer.update_display(north_stop, south_stop, north_time, south_time)
         time.sleep(constants.DISPLAY_SCROLL_SPEED)
 
 def update_next_trains():
     while True:
-        train_north, train_south = updater.get_next_trains()
+        trains_north, trains_south = updater.get_next_trains()
         with lock:
-            trip_north = next_trains_trip["North"]
-            trip_south = next_trains_trip["South"]
+            next_trains_trips["North"] = trains_north
+            next_trains_trips["South"] = trains_south
 
         time.sleep(constants.TRAIN_UPDATE_RATE_SECONDS)
 

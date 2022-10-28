@@ -20,6 +20,7 @@ class TrainUpdater:
         self.key = key
 
     # get_next_trains pings the MTA API for the most up-to-date train arrivals at Bedford Ave
+    # returns: list of Trip objects, in order of soonest arrival to latest arrival
     def get_next_trains(self):
         try:
             resp = requests.get(self.URL, headers={"x-api-key": self.key})
@@ -66,9 +67,8 @@ class TrainUpdater:
             return Trip(final_stop_id, direction, next_train_at_bedford)
 
 
-    # parse_trips_to_bedford returns the soonest trips in each direction (North and South)
-    # that stops at Bedford Av.
-    # if there are no trips to be found for one of the directions, return None for that direction.
+    # parse_trips_to_bedford returns the sorted trips in each direction (North and South)
+    # that stop at Bedford Av.
     def parse_trips_to_bedford(self, trips_to_bedford):
         northbound_trips = filter(lambda x: x.direction == Direction.NORTH.value, trips_to_bedford)
         southbound_trips = filter(lambda x: x.direction == Direction.SOUTH.value, trips_to_bedford)
@@ -76,7 +76,5 @@ class TrainUpdater:
         sorted_northbound_trips = sorted(northbound_trips, key=lambda x: x.next_train)
         sorted_southbound_trips = sorted(southbound_trips, key=lambda x: x.next_train)
 
-        next_northbound_train = sorted_northbound_trips[0] if len(sorted_northbound_trips) > 0 else None
-        next_southbound_train = sorted_southbound_trips[0] if len(sorted_southbound_trips) > 0 else None
+        return (sorted_northbound_trips, sorted_southbound_trips)
 
-        return (next_northbound_train, next_southbound_train)
