@@ -28,42 +28,39 @@ def parse_arrival_times(first_arrival, second_arrival):
         return str(first_arrival_in_min)
     return str(first_arrival_in_min) + "," + str(second_arrival_in_min)
 
-def parse_trips_and_update_display():
+# parse_trips parses all of the trips in a singular direction.
+# returns the texts to display: terminus and minutes to next train.
+def parse_trips(trips):
+    next_stop = "No Trips"
+    next_time = "-"
+    for x in range(len(trips)):
+        trip = trips[x]
+        now = time.time()
+        if trip.next_train > now:
+            next_stop = constants.L_STOPS[trip.terminus[:-1]]   # need to strip string, e.g. L01N -> L01
+
+            if x + 1 < len(trips):
+                next_time = parse_arrival_times(trip.next_train, trips[x + 1].next_train)
+            else:
+                next_time = parse_singular_arrival_time(trip.next_train)
+
+    return next_stop, next_time
+
+# update_display grabs the trip data from the map, parses the trips, and updates the display.
+def update_display():
     while True:
         with lock:
             trips_north = next_trains_trips["North"]
             trips_south = next_trains_trips["South"]
 
-        north_stop = "No Trips"
-        south_stop = "No Trips"
-        north_time = "-"
-        south_time = "-"
-
-        if trips_north:
-            # TODO clean this up and refactor out so there's no duplication
-            # loop to find next most trip that's after current time.
-            for x in range(len(trips_north)):
-                trip = trips_north[x]
-                if trip.next_train > time.time():
-                    north_stop = constants.L_STOPS[trip.terminus[:-1]]  # need to strip string: L01N -> L01
-                    north_time = parse_arrival_time(trip.next_train)
-
-                    # if north_time is less than 2 characters, we can display two times
-                    if len(north_time) < 2 and north_time != "-":
-                        if x + 1 < len(trips_north):
-                            second_north_time = parse_arrival_time(trips_north[x + 1].next_train)
-                            if len(second_north_time) < 2 and second_north_time != "-":
-                                north_time = north_time + "," + second_north_time
-
-        if trips_south:
-            for trip in trips_south:
-                if trip.next_train > time.time():
-                    south_stop = constants.L_STOPS[trips_south.terminus[:-1]]   # need to strip string: L01S -> L01
-                    south_time = parse_arrival_time(trips_south.next_train)
+        north_stop, north_time = parse_trips(trips_north) if trips_north else ("No Trips", "-")
+        south_stop, south_time = parse_trips(trips_south) if trips_south else ("No Trips", "-")
 
         displayer.update_display(north_stop, south_stop, north_time, south_time)
         time.sleep(constants.DISPLAY_SCROLL_SPEED)
 
+
+# update_next_trains updates the map with the latest from the API response.
 def update_next_trains():
     while True:
         trains_north, trains_south = updater.get_next_trains()
@@ -81,7 +78,7 @@ if __name__ == "__main__":
     print("Starting l-train-display...")
 
     try:
-        display_thread = threading.Thread(target=parse_trips_and_update_display)
+        display_thread = threading.Thread(target=update_display)
         update_thread = threading.Thread(target=update_next_trains)
         display_thread.setDaemon(True)
         update_thread.setDaemon(True)
