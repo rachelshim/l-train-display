@@ -50,4 +50,5 @@ If you would like to set up something similar, or if you happen to also live nea
 - show next 2 trains, as opposed to showing just the next train. might require some thinking on how to display this, the LED board is kind small.
 - make L train logo look nicer. right now it's very blocky (and kind of ratch -- uses a loop to color pixels; this probably could've been done with DrawCircle, or something).
 - display issues: space is an issue. Maybe when the terminus station to display in text is longer than the allotted area, use a smaller font? The comma looks ugly af also when displaying two times.
+- [anti-flicker mod](https://learn.adafruit.com/adafruit-rgb-matrix-bonnet-for-raspberry-pi/driving-matrices#step-2995409)
 - rewrite the whole thing in golang (lmao)
