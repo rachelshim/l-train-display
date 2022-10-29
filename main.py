@@ -59,6 +59,7 @@ def update_next_trains():
                 next_trains_trips["North"] = trains_north
             if trains_south:
                 next_trains_trips["South"] = trains_south
+                
         time.sleep(constants.TRAIN_UPDATE_RATE_SECONDS)
 
 
