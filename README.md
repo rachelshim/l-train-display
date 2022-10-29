@@ -1,8 +1,8 @@
 # l-train-display
 taking the L
 
-This project is Python software for an LED matrix display for the next trains for the L train at Bedford Avenue.
-It is is very basic; it just checks the closest trains in each direction (Manhattan-bound and Brooklyn-bound) for the L train at Bedford Avenue.
+This project is Python code for an LED matrix display for the next trains for the L train at Bedford Avenue.
+It is is very basic; it just checks the trains in each direction (Manhattan-bound and Brooklyn-bound) for the L train at Bedford Avenue.
 It uses the [MTA's GTFS Realtime feed](https://api.mta.info/#/landing) and [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix) library.
 
 I relied heavily on [this tutorial](https://howchoo.com/pi/raspberry-pi-led-matrix-panel) to set up the LED matrix and the Rapberry Pi.
@@ -49,4 +49,5 @@ If you would like to set up something similar, or if you happen to also live nea
 - the display shows 0 whenever the train is <30 seconds away or `arrival time - current time < 0`. Should show the actual next train time as opposed to "current" train which has left the station. This is because when going through the list of train arrivals, it looks for the earliest one and sometimes (by the time we get the data) the earliest one has already left the station. Storing arrival times for _n_ trains rather than just one should help with this.
 - show next 2 trains, as opposed to showing just the next train. might require some thinking on how to display this, the LED board is kind small.
 - make L train logo look nicer. right now it's very blocky (and kind of ratch -- uses a loop to color pixels; this probably could've been done with DrawCircle, or something).
+- display issues: space is an issue. Maybe when the terminus station to display in text is longer than the allotted area, use a smaller font? The comma looks ugly af also when displaying two times.
 - rewrite the whole thing in golang (lmao)
