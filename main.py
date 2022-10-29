@@ -40,11 +40,13 @@ def parse_trips_and_update_display():
                 if trip.next_train > time.time():
                     north_stop = constants.L_STOPS[trip.terminus[:-1]]
                     north_time = parse_arrival_time(trip.next_train)
+                    break
         if trips_south:
             for trip in trips_south:
                 if trip.next_train > time.time():
-                    south_stop = constants.L_STOPS[trips_south.terminus[:-1]]
-                    south_time = parse_arrival_time(trips_south.next_train)
+                    south_stop = constants.L_STOPS[trip.terminus[:-1]]
+                    south_time = parse_arrival_time(trip.next_train)
+                    break
 
         displayer.update_display(north_stop, south_stop, north_time, south_time)
         time.sleep(constants.DISPLAY_SCROLL_SPEED)
