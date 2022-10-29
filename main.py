@@ -31,8 +31,6 @@ def parse_arrival_times(first_arrival, second_arrival):
 # parse_trips parses all of the trips in a singular direction.
 # returns the texts to display: terminus and minutes to next train.
 def parse_trips(trips):
-    next_stop = "No Trips"
-    next_time = "-"
     for x in range(len(trips)):
         trip = trips[x]
         now = time.time()
@@ -43,8 +41,8 @@ def parse_trips(trips):
                 next_time = parse_arrival_times(trip.next_train, trips[x + 1].next_train)
             else:
                 next_time = parse_singular_arrival_time(trip.next_train)
-
-    return next_stop, next_time
+            return next_stop, next_time
+    return "No Trains", "-"
 
 # update_display grabs the trip data from the map, parses the trips, and updates the display.
 def update_display():
@@ -53,8 +51,8 @@ def update_display():
             trips_north = next_trains_trips["North"]
             trips_south = next_trains_trips["South"]
 
-        north_stop, north_time = parse_trips(trips_north) if trips_north else ("No Trips", "-")
-        south_stop, south_time = parse_trips(trips_south) if trips_south else ("No Trips", "-")
+        north_stop, north_time = parse_trips(trips_north) if trips_north else ("No Trains", "-")
+        south_stop, south_time = parse_trips(trips_south) if trips_south else ("No Trains", "-")
 
         displayer.update_display(north_stop, south_stop, north_time, south_time)
         time.sleep(constants.DISPLAY_SCROLL_SPEED)
