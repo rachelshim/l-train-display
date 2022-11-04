@@ -24,6 +24,7 @@ def parse_arrival_time(arrival):
         return str(arrival_in_min)
 
 def parse_trips_and_update_display():
+    age_ticks = 0
     while True:
         with lock:
             trips_north = next_trains_trips["North"]
@@ -48,8 +49,9 @@ def parse_trips_and_update_display():
                     south_time = parse_arrival_time(trip.next_train)
                     break
 
-        displayer.update_display(north_stop, south_stop, north_time, south_time)
+        displayer.update_display(north_stop, south_stop, north_time, south_time, age_ticks=age_ticks)
         time.sleep(constants.DISPLAY_SCROLL_SPEED)
+        age_ticks += 1
 
 def update_next_trains():
     while True:
@@ -59,7 +61,7 @@ def update_next_trains():
                 next_trains_trips["North"] = trains_north
             if trains_south:
                 next_trains_trips["South"] = trains_south
-                
+
         time.sleep(constants.TRAIN_UPDATE_RATE_SECONDS)
 
 
