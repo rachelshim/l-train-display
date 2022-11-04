@@ -115,7 +115,7 @@ class TrainDisplayer:
                 # bottom row
                 offset = pixel - WIDTH - (HEIGHT - 2)
                 x = WIDTH - 1 - offset
-                y = HEIGHT - 2
+                y = HEIGHT - 1
             else:
                 # left column
                 offset = pixel - 2 * WIDTH - (HEIGHT - 2)
