@@ -1,7 +1,18 @@
 #!/usr/bin/python3
 
+from math import floor
+from typing import NamedTuple
 from rgbmatrix import graphics, RGBMatrix, RGBMatrixOptions
 import constants
+
+class Color(NamedTuple):
+    # TODO: use everywhere
+    red: int
+    green: int
+    blue: int
+
+BACKGROUND = Color(red=0, green=0, blue=0)
+BORDER = Color(red=0, green=255, blue=0)
 
 class TrainDisplayer:
     def __init__(self, font):
@@ -80,8 +91,38 @@ class TrainDisplayer:
             pos_map["pos_A"] -= 1
             pos_map["pos_B"] -= 1
 
+    def draw_moving_border(self, progress: float, color: Color):
+        # TODO proper constants
+        WIDTH = 64
+        HEIGHT = 32
 
-    def update_display(self, top_text, bottom_text, top_min, bottom_min):
+        # remove two from each column to avoid double counting corners
+        total_pixels = 2 * WIDTH + 2 * (HEIGHT - 2)
+        pixels_so_far = int(floor(total_pixels * progress))
+
+        for pixel in range(pixels_so_far):
+            x = 0
+            y = 0
+            if pixel < WIDTH:
+                # top row
+                x = pixel
+                y = 0
+            elif pixel < WIDTH + HEIGHT - 2:
+                # right column
+                x = WIDTH - 1
+                y = 1 + pixel - WIDTH
+            elif pixel < 2 * WIDTH + HEIGHT - 2:
+                # bottom row
+                offset = pixel - WIDTH - (HEIGHT - 2)
+                x = WIDTH - 1 - offset
+                y = HEIGHT - 2
+            else:
+                # left column
+                offset = pixel - 2 * WIDTH - (HEIGHT - 2)
+                y = (HEIGHT - 2) - offset
+            self.canvas.SetPixel(x, y, color.red, color.green, color.blue)
+
+    def update_display(self, top_text, bottom_text, top_min, bottom_min, age_ticks: int):
         self.canvas.Clear()
 
         # we have to draw the display in order: text, then vertical spacers, then next train time, then logo.
@@ -116,6 +157,14 @@ class TrainDisplayer:
         # draw min to next train
         graphics.DrawText(self.canvas, self.font, constants.MIN_X, constants.MIN_Y_TOP, self.font_color, top_min)
         graphics.DrawText(self.canvas, self.font, constants.MIN_X, constants.MIN_Y_BOTTOM, self.font_color, bottom_min)
+
+        progress_toward_update = age_ticks * constants.DISPLAY_SCROLL_SPEED / constants.TRAIN_UPDATE_RATE_SECONDS
+        if progress_toward_update * 2.0 < 1.0:
+            self.draw_moving_border(progress=progress_toward_update * 2.0, color=BORDER)
+        else:
+            # draw green border then paint over it
+            self.draw_moving_border(progress=1.0, color=BORDER)
+            self.draw_moving_border(progress=2.0*(progress_toward_update - 0.5), color=BACKGROUND)
 
         self.canvas = self.matrix.SwapOnVSync(self.canvas)
 
