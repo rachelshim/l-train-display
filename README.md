@@ -3,9 +3,8 @@ Check it out in action [here](https://photos.app.goo.gl/rtn8anErWDMFe5kMA)!
 
 taking the L
 
-This project is Python code for an LED matrix display for the next trains for the L train at Bedford Avenue.
-It is is very basic; it just checks the trains in each direction (Manhattan-bound and Brooklyn-bound) for the L train at Bedford Avenue.
-It uses the [MTA's GTFS Realtime feed](https://api.mta.info/#/landing) and [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix) library.
+This project is Python software for an LED matrix display for the next trains for the L train at Bedford Avenue.
+It just checks the trains in each direction (Manhattan-bound and Brooklyn-bound) for the L train at Bedford Avenue using the [MTA's GTFS Realtime feed](https://api.mta.info/#/landing), and uses the [rpi-rgb-led-matrix](https://github.com/hzeller/rpi-rgb-led-matrix) library to update the LED Matrix.
 
 I relied heavily on [this tutorial](https://howchoo.com/pi/raspberry-pi-led-matrix-panel) to set up the LED matrix and the Rapberry Pi.
 
