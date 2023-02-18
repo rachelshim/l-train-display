@@ -1,4 +1,6 @@
 # l-train-display
+Check it out in action [here](https://photos.app.goo.gl/rtn8anErWDMFe5kMA)!
+
 taking the L
 
 This project is Python code for an LED matrix display for the next trains for the L train at Bedford Avenue.
